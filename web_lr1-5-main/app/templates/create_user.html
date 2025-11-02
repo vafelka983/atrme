@@ -1,0 +1,17 @@
+{% extends 'base.html' %} {% import 'macros/user_form.html' as forms with
+context %} {% block content %}
+<div class="row">
+  <div class="col-lg-8 offset-lg-2">
+    <h1 class="my-5">Создание пользователя</h1>
+    {% with messages = get_flashed_messages(with_categories=true) %} {% for
+    category, message in messages %}
+    <div class="alert alert-{{ category }}">{{ message }}</div>
+    {% endfor %} {% endwith %}
+    <form method="post" action="{{ url_for('create_user') }}">
+      {{ forms.user_form(form, errors, roles, true) }}
+      <button type="submit" class="btn btn-success">Сохранить</button>
+      <a href="{{ url_for('index') }}" class="btn btn-secondary">Отмена</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

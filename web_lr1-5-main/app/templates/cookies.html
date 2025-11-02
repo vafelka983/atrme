@@ -1,0 +1,31 @@
+{% extends 'base.html' %} {% block content %}
+<div class="row">
+  <div class="col-lg-12">
+    <h1 class="my-5">Управление Cookie</h1>
+
+    <p>{{ message }}</p>
+
+    <form method="POST">
+      {% if cookie_set %}
+      <button
+        type="submit"
+        name="action"
+        value="delete"
+        class="btn btn-danger mt-3"
+      >
+        Удалить Cookie
+      </button>
+      {% else %}
+      <button
+        type="submit"
+        name="action"
+        value="set"
+        class="btn btn-success mt-3"
+      >
+        Установить Cookie
+      </button>
+      {% endif %}
+    </form>
+  </div>
+</div>
+{% endblock %}

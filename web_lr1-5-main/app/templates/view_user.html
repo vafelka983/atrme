@@ -1,0 +1,40 @@
+{% extends 'base.html' %} {% block content %}
+<div class="row">
+  <div class="col-lg-8 offset-lg-2">
+    <h1 class="my-5">Просмотр пользователя</h1>
+    <table class="table table-bordered">
+      <tbody>
+        <tr>
+          <th scope="row">ID</th>
+          <td>{{ user.id }}</td>
+        </tr>
+        <tr>
+          <th scope="row">Логин</th>
+          <td>{{ user.login }}</td>
+        </tr>
+        <tr>
+          <th scope="row">Фамилия</th>
+          <td>{{ user.surname or '' }}</td>
+        </tr>
+        <tr>
+          <th scope="row">Имя</th>
+          <td>{{ user.name or '' }}</td>
+        </tr>
+        <tr>
+          <th scope="row">Отчество</th>
+          <td>{{ user.patronymic or '' }}</td>
+        </tr>
+        <tr>
+          <th scope="row">Роль</th>
+          <td>{{ user.role.name if user.role else '' }}</td>
+        </tr>
+        <tr>
+          <th scope="row">Дата создания</th>
+          <td>{{ user.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <a href="{{ url_for('index') }}" class="btn btn-secondary">Назад</a>
+  </div>
+</div>
+{% endblock %}

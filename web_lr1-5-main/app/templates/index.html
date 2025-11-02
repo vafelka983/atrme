@@ -1,0 +1,118 @@
+{% extends 'base.html' %} {% block content %}
+<div class="row">
+  <div class="col-lg-12">
+    {% with messages = get_flashed_messages(with_categories=true) %} {% for
+    category, message in messages %}
+    <div class="alert alert-{{ category }} mt-3">{{ message }}</div>
+    {% endfor %} {% endwith %}
+
+    <table class="table table-striped mt-3">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>ФИО</th>
+          <th>Роль</th>
+          <th>Действия</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td>
+            {{ user.surname or '' }} {{ user.name or '' }} {{ user.patronymic or
+            '' }}
+          </td>
+          <td>{{ user.role.name if user.role else '' }}</td>
+          <td>
+            <a
+              class="btn btn-info btn-sm"
+              href="{{ url_for('view_user', user_id=user.id) }}"
+              >Просмотр</a
+            >
+
+            {# Редактировать может админ или пользователь — только свой профиль
+            #} {% if current_user.is_authenticated and (current_user.role.name
+            == 'Administrator' or (current_user.role.name == 'User' and user.id
+            == current_user.id)) %}
+            <a
+              class="btn btn-primary btn-sm"
+              href="{{ url_for('edit_user', user_id=user.id) }}"
+              >Редактировать</a
+            >
+            {% endif %} {# Удалять может только администратор #} {% if
+            current_user.is_authenticated and current_user.role.name ==
+            'Administrator' %}
+            <!-- Кнопка для открытия модального окна -->
+            <button
+              type="button"
+              class="btn btn-danger btn-sm"
+              data-bs-toggle="modal"
+              data-bs-target="#deleteModal{{ user.id }}"
+            >
+              Удалить
+            </button>
+
+            <!-- Модальное окно подтверждения удаления -->
+            <div
+              class="modal fade"
+              id="deleteModal{{ user.id }}"
+              tabindex="-1"
+              aria-labelledby="deleteModalLabel{{ user.id }}"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel{{ user.id }}">
+                      Подтверждение удаления
+                    </h5>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Закрыть"
+                    ></button>
+                  </div>
+                  <div class="modal-body">
+                    Вы уверены, что хотите удалить пользователя<br />
+                    <strong
+                      >{{ user.surname }} {{ user.name }} {{ user.patronymic
+                      }}</strong
+                    >?
+                  </div>
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      data-bs-dismiss="modal"
+                    >
+                      Нет
+                    </button>
+                    <form
+                      method="post"
+                      action="{{ url_for('delete_user', user_id=user.id) }}"
+                    >
+                      <button type="submit" class="btn btn-danger">Да</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    {# Создание пользователей — только админ #} {% if
+    current_user.is_authenticated and current_user.role.name == 'Administrator'
+    %}
+    <a href="{{ url_for('create_user') }}" class="btn btn-success"
+      >Создать пользователя</a
+    >
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

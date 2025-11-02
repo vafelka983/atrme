@@ -1,0 +1,94 @@
+{% extends 'base.html' %} {% block content %}
+<div class="row">
+  <div class="col-lg-12">
+    <h1 class="mt-4 mb-3">Журнал посещений</h1>
+    {% if current_user.is_authenticated and current_user.role.name ==
+    'Administrator' %}
+    <div class="mb-4">
+      <a
+        href="{{ url_for('visit_logs.pages_report') }}"
+        class="btn btn-outline-primary"
+        >Отчёт по страницам</a
+      >
+      <a
+        href="{{ url_for('visit_logs.users_report') }}"
+        class="btn btn-outline-primary"
+        >Отчёт по пользователям</a
+      >
+    </div>
+    {% endif %}
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">№</th>
+          <th scope="col">Пользователь</th>
+          <th scope="col">Страница</th>
+          <th scope="col">Дата</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for log in pagination.items %}
+        <tr>
+          <td>
+            {{ (pagination.page - 1) * pagination.per_page + loop.index }}
+          </td>
+          <td>
+            {% if log.user %} {{ log.user.surname }} {{ log.user.name }} {{
+            log.user.patronymic }} {% else %} Гость {% endif %}
+          </td>
+          <td>{{ log.path }}</td>
+          <td>{{ log.created_at.strftime('%d.%m.%Y %H:%M:%S') }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    {# Пагинация #}
+    <nav aria-label="Навигация по страницам">
+      <ul class="pagination justify-content-center">
+        {% if pagination.has_prev %}
+        <li class="page-item">
+          <a
+            class="page-link"
+            href="{{ url_for('visit_logs', page=pagination.prev_num) }}"
+            aria-label="Предыдущая"
+          >
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+          <span class="page-link">&laquo;</span>
+        </li>
+        {% endif %} {% for p in pagination.iter_pages(left_edge=2, right_edge=2,
+        left_current=2, right_current=2) %} {% if p %} {% if p ==
+        pagination.page %}
+        <li class="page-item active"><span class="page-link">{{ p }}</span></li>
+        {% else %}
+        <li class="page-item">
+          <a class="page-link" href="{{ url_for('visit_logs', page=p) }}"
+            >{{ p }}</a
+          >
+        </li>
+        {% endif %} {% else %}
+        <li class="page-item disabled"><span class="page-link">…</span></li>
+        {% endif %} {% endfor %} {% if pagination.has_next %}
+        <li class="page-item">
+          <a
+            class="page-link"
+            href="{{ url_for('visit_logs', page=pagination.next_num) }}"
+            aria-label="Следующая"
+          >
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+          <span class="page-link">&raquo;</span>
+        </li>
+        {% endif %}
+      </ul>
+    </nav>
+  </div>
+</div>
+{% endblock %}

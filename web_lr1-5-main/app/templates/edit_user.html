@@ -1,0 +1,20 @@
+{% extends 'base.html' %} {% import 'macros/user_form.html' as forms with
+context %} {% block content %}
+<div class="row">
+  <div class="col-lg-8 offset-lg-2">
+    <h1 class="my-5">Редактирование пользователя</h1>
+    {% with messages = get_flashed_messages(with_categories=true) %} {% for
+    category, message in messages %}
+    <div class="alert alert-{{ category }}">{{ message }}</div>
+    {% endfor %} {% endwith %}
+    <form method="post" action="{{ url_for('edit_user', user_id=user.id) }}">
+      {# передаём existing user поля в form dict #} {% set form_data = {
+      'login': user.login, 'surname': user.surname, 'name': user.name,
+      'patronymic': user.patronymic, 'role_id': user.role_id|string } %} {{
+      forms.user_form(form_data, errors, roles, false) }}
+      <button type="submit" class="btn btn-primary">Сохранить</button>
+      <a href="{{ url_for('index') }}" class="btn btn-secondary">Отмена</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

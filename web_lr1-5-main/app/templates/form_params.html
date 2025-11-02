@@ -1,0 +1,52 @@
+{% extends 'base.html' %} {% block content %}
+<div class="row">
+  <div class="col-lg-8 offset-lg-2">
+    <h1 class="my-5">Параметры формы</h1>
+
+    <form method="POST">
+      <div class="mb-3">
+        <label for="name" class="form-label">Имя</label>
+        <input
+          type="text"
+          class="form-control"
+          id="name"
+          name="name"
+          required
+        />
+      </div>
+
+      <div class="mb-3">
+        <label for="email" class="form-label">Электронная почта</label>
+        <input
+          type="email"
+          class="form-control"
+          id="email"
+          name="email"
+          required
+        />
+      </div>
+
+      <div class="mb-3">
+        <label for="message" class="form-label">Сообщение</label>
+        <textarea
+          class="form-control"
+          id="message"
+          name="message"
+          rows="3"
+        ></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Отправить</button>
+    </form>
+
+    {% if form_data %}
+    <h3 class="mt-5">Отправленные данные:</h3>
+    <ul class="list-group mt-3">
+      {% for key, value in form_data.items() %}
+      <li class="list-group-item"><strong>{{ key }}:</strong> {{ value }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
